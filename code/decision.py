@@ -1,15 +1,14 @@
 import numpy as np
 
 
-# This is where you can build a decision tree for determining throttle, brake and steer 
-# commands based on the output of the perception_step() function
 def decision_step(Rover):
-
-    # Implement conditionals to decide what to do given perception data
-    # Here you're all set up with some basic functionality but you'll need to
-    # improve on this decision tree to do a good job of navigating autonomously!
-
-    # Example:
+    """This decision tree determines throttle, braking and steering commands
+    based on the output of the perception_step() function in perception.py.
+    The tree uses conditionals to decide what to do given perception data.
+    
+    :param Rover: Rover class object that stores all Rover state parameters
+    :return: Rover class object with updated state parameters
+    """
     # Check if we have vision data to make decisions with
     if Rover.nav_angles is not None:
         # Check for Rover.mode status
@@ -60,12 +59,11 @@ def decision_step(Rover):
                     # Set steer to mean angle
                     Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
                     Rover.mode = 'forward'
-    # Just to make the rover do something 
-    # even if no modifications have been made to the code
+    # Just to make the rover do something even if no modifications have been
+    #    made to the code
     else:
         Rover.throttle = Rover.throttle_set
         Rover.steer = 0
         Rover.brake = 0
 
     return Rover
-
