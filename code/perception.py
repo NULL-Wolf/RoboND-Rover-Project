@@ -57,8 +57,8 @@ def rock_thresh(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV, 3)
     
     # Define range of yellow colors in HSV
-    lower_yellow = np.array([20, 100, 100], dtype='uint8')
-    upper_yellow = np.array([25, 255, 255], dtype='uint8')
+    lower_yellow = np.array([20, 150, 100], dtype='uint8')
+    upper_yellow = np.array([50, 255, 255], dtype='uint8')
     
     # Threshold the HSV image to get only yellow colors
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
@@ -135,8 +135,8 @@ def translate_pix(xpix_rot, ypix_rot, xpos, ypos, scale):
         pixel arrays
     """
     # Scale and translate the rotated pixel arrays
-    xpix_translated = np.int_(xpos + (xpix_rot / scale))
-    ypix_translated = np.int_(ypos + (ypix_rot / scale))
+    xpix_translated = (xpos + (xpix_rot / scale))
+    ypix_translated = (ypos + (ypix_rot / scale))
     return xpix_translated, ypix_translated
 
 
@@ -212,7 +212,7 @@ def perception_step(Rover):
 
     # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
     navigable = navigable_thresh(img=warped, rgb_thresh=(160, 160, 160)) 
-    obstacles = obstacle_thresh(img=warped, rgb_thresh=(80, 80, 80))
+    obstacles = obstacle_thresh(img=warped, rgb_thresh=(90, 90, 90))
     rock_samples = rock_thresh(img=warped)
 
     # 4) Update Rover.vision_image (displayed on left side of screen)
@@ -247,19 +247,10 @@ def perception_step(Rover):
     Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
 
     # 8) Convert rover-centric pixel positions to polar coordinates
-    distances, angles = to_polar_coords(x_pixel=navigable_x_world,
-                                        y_pixel=navigable_y_world)
+    distances, angles = to_polar_coords(x_pixel=navigable_xpix,
+                                        y_pixel=navigable_ypix)
     # Update Rover pixel distances and angles
     Rover.nav_dists = distances
     Rover.nav_angles = angles
 
-    """
-    if len(rocks_x_world) > 5:
-        Rover.near_sample = 1
-        rock_distances, rock_angles = to_polar_coords(rocks_xpix, rocks_ypix)
-        #Rover.steer = np.clip(np.mean(rock_angles * 180/np.pi), -15, 15)
-    else:
-        Rover.near_sample = 0
-    """
-    
     return Rover
