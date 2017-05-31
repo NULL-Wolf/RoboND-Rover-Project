@@ -212,7 +212,7 @@ def perception_step(Rover):
 
     # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
     navigable = navigable_thresh(img=warped, rgb_thresh=(160, 160, 160)) 
-    obstacles = obstacle_thresh(img=warped, rgb_thresh=(90, 90, 90))
+    obstacles = obstacle_thresh(img=warped, rgb_thresh=(140, 140, 140))
     rock_samples = rock_thresh(img=warped)
 
     # 4) Update Rover.vision_image (displayed on left side of screen)
@@ -252,5 +252,20 @@ def perception_step(Rover):
     # Update Rover pixel distances and angles
     Rover.nav_dists = distances
     Rover.nav_angles = angles
+
+    if len(rocks_xpix) > 5:
+        # If a rock is identified, make the rover navigate to it
+        rock_distance, rock_angle = to_polar_coords(x_pixel=rocks_xpix,
+                                                    y_pixel=rocks_ypix)
+        avg_rock_angle = np.mean(rock_angle * 180/np.pi)
+        if avg_rock_angle < 15 and avg_rock_angle > -15:
+            # Only activate sample_seen if the rock angle is within 15 deg
+            Rover.rock_dist = rock_distance
+            Rover.rock_angle = rock_angle 
+            Rover.sample_seen = True
+    else:
+        # Add a check to ensure the sample was acquired before continuing
+        #Rover.sample_seen = False
+        pass
 
     return Rover
