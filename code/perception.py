@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import time
 
 
 def navigable_thresh(img, rgb_thresh=(160, 160, 160)):
@@ -242,9 +243,13 @@ def perception_step(Rover):
         xpos=xpos, ypos=ypos, yaw=yaw, world_size=worldmap_size, scale=scale)
 
     # 7) Update Rover worldmap (to be displayed on right side of screen)
-    Rover.worldmap[obstacles_y_world, obstacles_x_world, 0] += 1
-    Rover.worldmap[rocks_y_world, rocks_x_world, 1] += 1
-    Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
+    if (Rover.pitch < 0.5 or Rover.pitch > 359.5) and (Rover.roll < 0.5 or Rover.roll > 359.5):
+        Rover.worldmap[obstacles_y_world, obstacles_x_world, 0] += 1
+        Rover.worldmap[rocks_y_world, rocks_x_world, 1] += 1
+        Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
+    else:
+        #print('ROLL OR PITCH EXCEEDS LIMIT!! NOT UPDATING MAP')
+        pass
 
     # 8) Convert rover-centric pixel positions to polar coordinates
     distances, angles = to_polar_coords(x_pixel=navigable_xpix,
@@ -257,15 +262,15 @@ def perception_step(Rover):
         # If a rock is identified, make the rover navigate to it
         rock_distance, rock_angle = to_polar_coords(x_pixel=rocks_xpix,
                                                     y_pixel=rocks_ypix)
-        avg_rock_angle = np.mean(rock_angle * 180/np.pi)
-        if avg_rock_angle < 15 and avg_rock_angle > -15:
-            # Only activate sample_seen if the rock angle is within 15 deg
-            Rover.rock_dist = rock_distance
-            Rover.rock_angle = rock_angle 
-            Rover.sample_seen = True
-    else:
-        # Add a check to ensure the sample was acquired before continuing
-        #Rover.sample_seen = False
-        pass
+        Rover.rock_dist = rock_distance
+        Rover.rock_angle = rock_angle 
+        if not Rover.sample_seen:
+            # First frame sample has been seen, thus start the sample timer
+            Rover.sample_timer = time.time()
+        Rover.sample_seen = True
+
+    if Rover.start_pos is None:
+        Rover.start_pos = (Rover.pos[0], Rover.pos[1])
+        print('STARTING POSITION IS: ', Rover.start_pos)
 
     return Rover

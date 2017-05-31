@@ -40,6 +40,7 @@ class RoverState():
     def __init__(self):
         self.start_time = None # To record the start time of navigation
         self.total_time = None # To record total duration of naviagation
+        self.start_pos = None # Position (x, y) of the starting location
         self.img = None # Current camera image
         self.pos = None # Current position (x, y)
         self.yaw = None # Current yaw angle
@@ -75,10 +76,16 @@ class RoverState():
         self.samples_found = 0 # To count the number of samples found
         self.near_sample = 0 # Will be set to telemetry value data["near_sample"]
         self.sample_seen = False # If a sample is detected, change to True
+        self.sample_max_search = 40 # Max seconds allowed to get seen sample
+        self.sample_timer = time.time() # Time for when sample was first seen
         self.rock_angle = [] # Tracks the angle to the sample
         self.rock_dist = [] # Tracks the distance to the sample
         self.picking_up = 0 # Will be set to telemetry value data["picking_up"]
         self.send_pickup = False # Set to True to trigger rock pickup
+        self.max_wheel_lock = 10 # Set max allowed sec wheels can be locked
+        self.wheel_lock = time.time() # Time the wheels are fully turned
+        self.max_stuck = 3 # Set max allowed sec for rover to not move
+        self.stuck_time = time.time() # Time with no velocity but throttle set
 # Initialize our rover 
 Rover = RoverState()
 
@@ -101,7 +108,7 @@ def telemetry(sid, data):
         fps = frame_counter
         frame_counter = 0
         second_counter = time.time()
-    print("Current FPS: {}".format(fps))
+    #print("Current FPS: {}".format(fps))
 
     if data:
         global Rover
