@@ -17,23 +17,15 @@ def decision_step(Rover):
             Rover.brake = Rover.brake_set
             Rover.steer = 0
             print('RETURNED HOME!!!! BEAM ME UP!!!')
+            return Rover
 
     # Check if the rover is caught in a doughnut
     if Rover.steer == 15 or Rover.steer == -15:
         # If the wheels are full over for more than 10 seconds, in a doughnut
-        if time.time() - Rover.wheel_lock > Rover.max_wheel_lock:
+        if time.time() - Rover.wheel_lock < Rover.max_wheel_lock:
             # Initiate doughnut mode
             print('STEERING LOCK DETECTED')
             Rover.mode = 'doughnut'
-            # Rover.throttle = 0
-            # Rover.brake = Rover.brake_set
-            # if Rover.steer >0:
-            #     Rover.steer = -15
-            # else:
-            #     Rover.steer = 15
-    else:
-        # Reset the wheel lock time
-        Rover.wheel_lock = time.time()
 
     # Rover is caught in a doughnut so try to escape it
     if Rover.mode == 'doughnut':
@@ -44,8 +36,11 @@ def decision_step(Rover):
         else:
             # Perform evasion to get out of doughnut
             Rover.throttle = 0
-            Rover.brake = Rover.brake_set*2
-            Rover.steer = 0
+            Rover.brake = Rover.brake_set
+            if Rover.steer > 0:
+                Rover.steer = -15
+            else:
+                Rover.steer = 15
         # If in doughnut mode, exit function after evasion performed
         return Rover
 
