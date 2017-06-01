@@ -3,14 +3,14 @@
 [nav_threshold]: ./misc/nav_threshold.png
 [rock_threshold]: ./misc/rock_threshold.png
 [image_pipeline]: ./misc/image_pipeline.png
-[rover_navigation]: ./output/rover_mapping.mp4
+[rover_navigation]: ./output/rover_mapping.gif
 
 # Project: Search and Sample Return
 ---
 
 ![Search and sample return complete][run_complete]
 
-This search and sample return project was based after the [NASA sample return challenge](https://www.nasa.gov/directorates/spacetech/centennial/challenges/sample_return_robot/index.html) and it provides experience with the three essential elements of robotics, which are perception, decision making and actuation. This specific project uses the Unity game engine to simulate the environment.
+This search and sample return project was based after the [NASA sample return challenge](https://www.nasa.gov/directorates/spacetech/centennial_challenges/sample_return_robot/index.html) and it provides experience with the three essential elements of robotics, which are perception, decision making and actuation. This specific project uses the Unity game engine to simulate the environment.
 
 ## The Simulator
 The simulator can be downloaded here:
@@ -32,11 +32,13 @@ This [Jupyter Notebook](./code/Rover_Project_Test_Notebook.ipynb) includes all o
 The rover relies on a single camera feed for determining its actions. To find the navigable path, I use a RGB threshold of (160, 160, 160) where any pixels above those values is considered navigable terrain. Logically, anything that not considered navigable terrain is an obstacle. Thus, reversing the threshold will provide an array of where obstacles are.
 
 Here is what the navigable color threshold looks like. Any area in white the rover is able to drive through.
+
 ![Navigable color threshold][nav_threshold]
 
 The final color threshold used finds the sample rocks that we are after. These sample rocks are yellow-ish gold. I used a HSV filter range of [20, 150, 100] and [50, 255, 255] to pull out yello-ish objects. OpenCV has a function called `inRange` that handles the color range threshold. It requires an HSV image (via a converted RGB image) and the lower and upper range. Any time a sample rock is seen in the rover's camera, a mask with values will be returned. This mask is used to guide the rover over to the sample rock.
 
 Here is what that rock sample color threshold looks like.
+
 ![Sample rock threshold][rock_threshold]
 
 ### Image Pipeline
@@ -52,6 +54,7 @@ This transformed image is then run through the three color threshold functions I
 An important next step is to change the image arrays to be relative to the front of the rover. This is done by flipping the image so it's centered along the x-axis of the rover's grid.
 
 The image below shows the main steps to go from the rover's camera to the rover-centric navigable image.
+
 ![Raw image to rover navigable path][image_pipeline]
 
 #### World Coordinates
@@ -60,6 +63,7 @@ In order to fill out the world map, the image's rover-centric coordinates must b
 By performing a perspective transformation and color threshold, it is possible to calculate a suitable path the rover can drive forward. I used the average angle from the navigable area in front of the rover.
 
 Here is a video of the rover navigating through the simulation while populating the world map.
+
 ![Rover navigation video][rover_navigation]
 
 ---
