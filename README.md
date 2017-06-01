@@ -19,10 +19,16 @@ The simulator can be downloaded here:
 * [Mac](https://s3-us-west-1.amazonaws.com/udacity-robotics/Rover+Unity+Sims/Mac_Roversim.zip)
 * [Windows](https://s3-us-west-1.amazonaws.com/udacity-robotics/Rover+Unity+Sims/Windows_Roversim.zip)
 
-You can test out the simulator by opening it up and choosing "Training Mode." To run the automated code included in this repository, run `python ./code/drive_rover.py`, then start the simulator and choose "Autonomous Mode."
-
 ## Dependencies
-The included code requires Python 3 and many dependencies. Using Anaconda is the easiest way to get things working. View the instructions at the [RoboND Python Starterkit](https://github.com/ryan-keenan/RoboND-Python-Starterkit).
+The included code requires Python 3 and many dependencies. Using Anaconda is the easiest way to get things working. View the instructions at the [RoboND Python Starterkit](https://github.com/ryan-keenan/RoboND-Python-Starterkit/blob/master/doc/configure_via_anaconda.md).
+
+## Run the Code
+You can test out the simulator by opening it up and choosing "Training Mode."
+
+To run the automated code included in this repository:
+* Activate the conda environment with `source activate RoboND` (setup by following the instructions [here](https://github.com/ryan-keenan/RoboND-Python-Starterkit/blob/master/doc/configure_via_anaconda.md))
+* Run `python ./code/drive_rover.py` to start the automation logic (this communicates with the simulator directly)
+* Start the simulator (double click `Roversim.x86_64` or `Roversim.x86`) and choose "Autonomous Mode."
 
 ## Notebook Analysis
 This [Jupyter Notebook](./code/Rover_Project_Test_Notebook.ipynb) includes all of the major functions, which are broken out into individual sections. I will describe the unique functions below:
