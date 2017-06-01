@@ -1,5 +1,6 @@
 [//]: # (Image References)
 [run_complete]: ./misc/automated_run_complete.png
+[automated_run_clip]: ./output/automated_run_clip.gif
 [nav_threshold]: ./misc/nav_threshold.png
 [rock_threshold]: ./misc/rock_threshold.png
 [image_pipeline]: ./misc/image_pipeline.png
@@ -8,7 +9,7 @@
 # Rover Search and Sample Return
 ---
 
-![Search and sample return complete][run_complete]
+![Automated run clip][automated_run_clip]
 
 This search and sample return project was based after the [NASA sample return challenge](https://www.nasa.gov/directorates/spacetech/centennial_challenges/sample_return_robot/index.html), and it provides experience with the three essential elements of robotics, which are perception, decision making and actuation. This specific project uses the Unity game engine to simulate the environment.
 
@@ -106,6 +107,8 @@ Each of these sections uses a combination of either changing the velocity or dir
 
 ### Performance
 The code I built has good performance mapping and navigating the simulation. It most runs, it is able to map 90% of the area while maintaining a fidelity of around 70%. The code is often able to collect two to four rocks, depending on where the rocks are located. If a rock is in a side nook, the rover will have trouble finding it.
+
+![Search and sample return complete][run_complete]
 
 ---
 
