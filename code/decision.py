@@ -20,14 +20,17 @@ def decision_step(Rover):
 
     # Check if the rover is caught in a doughnut
     if Rover.steer == 15 or Rover.steer == -15:
-        # If the wheels are full over for more than 30 seconds, in a doughnut
+        # If the wheels are full over for more than 10 seconds, in a doughnut
         if time.time() - Rover.wheel_lock > Rover.max_wheel_lock:
             # Initiate doughnut mode
             print('STEERING LOCK DETECTED')
-            #Rover.mode = 'doughnut'
-            Rover.throttle = 0
-            Rover.brake = Rover.brake_set
-            Rover.steer = 0
+            Rover.mode = 'doughnut'
+            # Rover.throttle = 0
+            # Rover.brake = Rover.brake_set
+            # if Rover.steer >0:
+            #     Rover.steer = -15
+            # else:
+            #     Rover.steer = 15
     else:
         # Reset the wheel lock time
         Rover.wheel_lock = time.time()
@@ -41,11 +44,8 @@ def decision_step(Rover):
         else:
             # Perform evasion to get out of doughnut
             Rover.throttle = 0
-            Rover.brake = Rover.brake_set
-            if Rover.steer > 0:
-                Rover.steer = -15
-            else:
-                Rover.steer = 15
+            Rover.brake = Rover.brake_set*2
+            Rover.steer = 0
         # If in doughnut mode, exit function after evasion performed
         return Rover
 
@@ -109,49 +109,11 @@ def decision_step(Rover):
                     else:
                         Rover.throttle = 0
                         Rover.brake = 0
-                        Rover.steer = avg_rock_angle/4
+                        Rover.steer = avg_rock_angle/6
                 else:
                     # Keep the logic simple and ignore samples +/-13 degrees
                     print('LOST SIGHT OF THE SAMPLE')
                     Rover.sample_seen = False
-                    """
-                    if Rover.sample_est_forward_time == 0:
-                        # Calculate the time at the current velocity before
-                        #   the rover will intercept the sample 90 deg point
-                        print('CALCULATING EST COAST TIME')
-                        avg_rock_dist = np.mean(Rover.rock_dist)
-                        est_forward_dist = np.cos(avg_rock_angle) * avg_rock_dist
-                        est_time_to_90_deg = est_forward_dist / Rover.vel
-                        Rover.sample_est_forward_time = est_time_to_90_deg
-                        Rover.sample_timer = time.time()
-                        # Notate which direction the sample is on
-                        if avg_rock_angle > 0:
-                            Rover.sample_direction = 1
-                        else:
-                            Rover.sample_direction = -1
-                    if time.time() - Rover.sample_timer < Rover.sample_est_forward_time:
-                        # Continue coasting forward
-                        #print('COASTING FOR %0.2f SECONDS' %
-                        #      (Rover.sample_est_forward_time - (time.time() - Rover.sample_timer)))
-                        Rover.throttle = 0
-                        Rover.brake = 0
-                        Rover.steer = 0
-                    else:
-                        # Passed the intercept point; Stop the rover and rotate
-                        Rover.throttle = 0
-                        if Rover.vel > 0:
-                            print('STOPPING FOR ROTATION TO FACE SAMPLE')
-                            Rover.brake = Rover.brake_set
-                            Rover.steer = 0
-                        else:
-                            print('ROTATING TO FACE SAMPLE')
-                            Rover.brake = 0
-                            # Rotate based on the original sample location
-                            if Rover.sample_direction == 1:
-                                Rover.steer = 90
-                            else:
-                                Rover.steer = -90
-                """
             #elif max(Rover.nav_dists) >= Rover.stop_forward and len(Rover.nav_angles) > 50:  
             elif len(Rover.nav_angles) > 50:  
                 # If mode is forward, navigable terrain looks good 

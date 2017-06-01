@@ -76,7 +76,7 @@ class RoverState():
         self.samples_found = 0 # To count the number of samples found
         self.near_sample = 0 # Will be set to telemetry value data["near_sample"]
         self.sample_seen = False # If a sample is detected, change to True
-        self.sample_max_search = 40 # Max seconds allowed to get seen sample
+        self.sample_max_search = 30 # Max seconds allowed to get seen sample
         self.sample_timer = time.time() # Time for when sample was first seen
         self.rock_angle = [] # Tracks the angle to the sample
         self.rock_dist = [] # Tracks the distance to the sample

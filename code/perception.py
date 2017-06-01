@@ -244,12 +244,10 @@ def perception_step(Rover):
 
     # 7) Update Rover worldmap (to be displayed on right side of screen)
     if (Rover.pitch < 0.5 or Rover.pitch > 359.5) and (Rover.roll < 0.5 or Rover.roll > 359.5):
+        # Limit world map updates to only images that have limited roll and pitch
         Rover.worldmap[obstacles_y_world, obstacles_x_world, 0] += 1
-        Rover.worldmap[rocks_y_world, rocks_x_world, 1] += 1
+        Rover.worldmap[rocks_y_world, rocks_x_world, 1] = 255
         Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
-    else:
-        #print('ROLL OR PITCH EXCEEDS LIMIT!! NOT UPDATING MAP')
-        pass
 
     # 8) Convert rover-centric pixel positions to polar coordinates
     distances, angles = to_polar_coords(x_pixel=navigable_xpix,
